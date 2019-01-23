@@ -66,11 +66,7 @@ function generateDocumentation(
 
 	/** visit nodes finding exported classes */
 	function visit( node: ts.Node ) {
-		// console.log( node.getFullText() );
-		// console.log( node.getText().length );
-		// console.log( node.decorators )
-
-		// console.log( '----\n\n' )
+		// TODO: parse typedefs here or when they appears at runtime.
 
 		// Only consider exported nodes
 		if ( !isNodeExported( node ) ) {
@@ -91,7 +87,7 @@ function generateDocumentation(
 
 				const symbol = itResult.value;
 
-				const member = symbol.valueDeclaration || symbol.declarations[ 0 ];
+				const member = getDeclaration( symbol );
 
 				if ( ts.isConstructorDeclaration( member ) ) {
 					output.push( ...serializeConstructor( symbol ) );
@@ -201,6 +197,7 @@ function generateDocumentation(
 	}
 }
 
+// TODO: What type do we need at the end? How much deep it should be?
 function getTypeInfo( checker: ts.TypeChecker, type: ts.Type ) {
 	let fileName;
 
@@ -215,12 +212,15 @@ function getTypeInfo( checker: ts.TypeChecker, type: ts.Type ) {
 	};
 }
 
+// TODO: Check why valueDeclaration sometimes doesn't exist.
 function getDeclaration( symbol: ts.Symbol ): ts.Declaration {
 	return symbol.valueDeclaration || symbol.declarations[ 0 ];
 }
 
+// TODO: Check why it happens that source files are sometimes relative and sometimes not.
 function getFileName( declaration: ts.Declaration ) {
 	const fileName = declaration.getSourceFile().fileName;
+
 	const cwd = process.cwd();
 
 	return path.relative( cwd, fileName );
