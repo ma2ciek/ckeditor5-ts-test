@@ -29,11 +29,8 @@ export interface Spy {
 	 */
 	(): void;
 
-	/** Can be called with some weird params */
+	/** Cna be called with some weird params */
 	( x: number ): void;
-
-	new ( someParam: number ): Spy;
-	/** Can be invoked with new */
 
 	/**
 	 * But can be called.

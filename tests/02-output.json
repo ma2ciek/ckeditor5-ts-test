@@ -1,0 +1,145 @@
+[
+	{
+		"documentation": "Position on the x axis.",
+		"documented": true,
+		"fullName": "tests/02-input.d.ts/Point#x",
+		"kind": "property",
+		"memberOf": "tests/02-input.d.ts/Point",
+		"meta": {
+			"end": 101,
+			"file": "tests/02-input.d.ts",
+			"start": 91
+		},
+		"name": "x",
+		"private": false,
+		"type": {
+			"value": "number"
+		}
+	},
+	{
+		"documentation": "Position on the y axis.",
+		"documented": true,
+		"fullName": "tests/02-input.d.ts/Point#y",
+		"kind": "property",
+		"memberOf": "tests/02-input.d.ts/Point",
+		"meta": {
+			"end": 152,
+			"file": "tests/02-input.d.ts",
+			"start": 142
+		},
+		"name": "y",
+		"private": false,
+		"type": {
+			"value": "number"
+		}
+	},
+	{
+		"documentation": "Point interface",
+		"documented": true,
+		"fullName": "tests/02-input.d.ts/Point",
+		"kind": "interface",
+		"meta": {
+			"end": 154,
+			"file": "tests/02-input.d.ts",
+			"start": 27
+		},
+		"name": "Point",
+		"private": false,
+		"templates": [],
+		"type": {
+			"value": "any"
+		}
+	},
+	{
+		"documentation": "Set method",
+		"documented": true,
+		"kind": "function",
+		"meta": {
+			"end": 283,
+			"file": "tests/02-input.d.ts",
+			"start": 243
+		},
+		"name": "set",
+		"parameters": [
+			{
+				"documentation": "",
+				"name": "propName",
+				"type": {
+					"value": "string"
+				}
+			},
+			{
+				"documentation": "",
+				"name": "value",
+				"type": {
+					"file": "tests/02-input.d.ts",
+					"value": "T"
+				}
+			}
+		],
+		"private": false,
+		"returnType": {
+			"value": "void"
+		}
+	},
+	{
+		"documentation": "",
+		"documented": true,
+		"fullName": "tests/02-input.d.ts/Settable",
+		"kind": "interface",
+		"meta": {
+			"end": 285,
+			"file": "tests/02-input.d.ts",
+			"start": 183
+		},
+		"name": "Settable",
+		"private": false,
+		"templates": [
+			{
+				"documentation": "Foo",
+				"name": "T"
+			},
+			{
+				"documentation": "",
+				"name": "X"
+			}
+		],
+		"type": {
+			"value": "any"
+		}
+	},
+	{
+		"documentation": "But can be called.",
+		"documented": true,
+		"fullName": "tests/02-input.d.ts/Spy#called",
+		"kind": "property",
+		"memberOf": "tests/02-input.d.ts/Spy",
+		"meta": {
+			"end": 480,
+			"file": "tests/02-input.d.ts",
+			"start": 464
+		},
+		"name": "called",
+		"private": false,
+		"type": {
+			"value": "boolean"
+		}
+	},
+	{
+		"documentation": "",
+		"documented": true,
+		"fullName": "tests/02-input.d.ts/Spy",
+		"kind": "interface",
+		"meta": {
+			"end": 482,
+			"file": "tests/02-input.d.ts",
+			"start": 287
+		},
+		"name": "Spy",
+		"private": false,
+		"templates": [],
+		"type": {
+			"value": "any"
+		}
+	}
+]

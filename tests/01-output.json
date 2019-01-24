@@ -1,0 +1,66 @@
+[
+    {
+        "kind": "class",
+        "implements": [
+            "X"
+        ],
+        "memberOf": "tests/01-input.js",
+        "fullName": "tests/01-input.jsC",
+        "name": "C",
+        "documentation": "Documentation for C",
+        "type": {
+            "file": "tests/01-input.js",
+            "value": "typeof C"
+        },
+        "documented": true,
+        "private": false,
+        "meta": {
+            "file": "tests/01-input.js",
+            "start": 51,
+            "end": 395
+        }
+    },
+    {
+        "kind": "property",
+        "memberOf": "tests/01-input.js/any",
+        "fullName": "tests/01-input.js/any#a",
+        "name": "a",
+        "documentation": "",
+        "type": {
+			"value": "number"
+        },
+        "documented": true,
+        "private": false,
+        "meta": {
+            "file": "tests/01-input.js",
+            "start": 297,
+            "end": 307
+        }
+    },
+    {
+        "kind": "function",
+        "name": "foo",
+        "documented": true,
+        "private": true,
+        "meta": {
+            "file": "tests/01-input.js",
+            "start": 362,
+            "end": 393
+        },
+        "parameters": [
+            {
+                "name": "args",
+                "documentation": "",
+                "type": {
+                    "file": "node_modules/typescript/lib/lib.es5.d.ts",
+                    "value": "any[]"
+                }
+            }
+        ],
+        "returnType": {
+            "file": "node_modules/typescript/lib/lib.es5.d.ts",
+            "value": "any[]"
+        },
+        "documentation": ""
+    }
+]

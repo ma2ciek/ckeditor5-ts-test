@@ -1,0 +1,50 @@
+[
+    {
+        "kind": "variable",
+        "name": "point",
+        "documentation": "",
+        "type": {
+            "value": "Point",
+            "file": "src/utils.js"
+        },
+        "documented": true,
+        "private": false,
+        "meta": {
+            "file": "src/exports.js",
+            "start": 43,
+            "end": 48
+        }
+    },
+    {
+        "kind": "variable",
+        "name": "point2",
+        "documentation": "",
+        "type": {
+            "value": "Point",
+            "file": "src/interface.d.ts"
+        },
+        "documented": true,
+        "private": false,
+        "meta": {
+            "file": "src/exports.js",
+            "start": 100,
+            "end": 123
+        }
+    },
+    {
+        "kind": "function",
+        "name": "x",
+        "documented": true,
+        "private": false,
+        "meta": {
+            "file": "src/exports.js",
+            "start": 126,
+            "end": 218
+        },
+        "parameters": [],
+        "returnType": {
+            "value": "void"
+        },
+        "documentation": ""
+    }
+]

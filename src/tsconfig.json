@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"noEmit": true,
+		"checkJs": true,
+		"target": "es6"
+	},
+	"include": [
+		"advanced-types.js"
+	]
+}
