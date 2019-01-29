@@ -13,6 +13,7 @@ function generateDocumentation(fileNames, options) {
         if (program.getRootFileNames().includes(sourceFile.fileName)) {
             // Walk the tree to search for exported stuff.
             ts.forEachChild(sourceFile, node => visit(node));
+            const symbol = sourceFile.locals.get('c');
         }
     }
     return output;
@@ -158,20 +159,51 @@ function isNodeExported(node) {
 }
 // TODO: What type do we need at the end? How much deep it should be?
 function getTypeInfo(checker, type) {
-    const typeInfo = {
-        value: checker.typeToString(type)
-    };
+    if (type.isUnion()) {
+        return {
+            kind: 'union',
+            value: type.types.map(t => getTypeInfo(checker, t))
+        };
+    }
+    // TODO - maybe we can check it differently.
+    if (type.intrinsicName === 'error') {
+        // throw new Error( 'Error has happened while parsing type.' );
+    }
     // Primitive types don't have symbol.
     if (type.symbol) {
-        typeInfo.file = getFileName(getFirstDeclaration(type.symbol));
+        const typeRef = type;
+        const fileName = getFileName(getFirstDeclaration(typeRef.symbol))
+            .replace('node_modules/', '');
+        const typeInfo = {
+            kind: 'reference',
+            value: checker.typeToString(typeRef),
+            id: typeRef.id // TODO: internal.
+        };
+        if (!fileName.startsWith('typescript')) {
+            typeInfo.file = fileName;
+        }
+        // Generic types like Array<string>.
+        if (typeRef.typeArguments) {
+            typeInfo.typeArgs = [...typeRef.typeArguments]
+                .map(t => getTypeInfo(checker, t));
+            // TODO
+            typeInfo.value = typeRef.symbol.name;
+        }
+        return typeInfo;
     }
-    return typeInfo;
+    // TODO: Check literal types.
+    // console.log( ( type as ts.LiteralType ).value );
+    // Assume that the type is primitive.
+    return {
+        value: checker.typeToString(type),
+        kind: 'primitive'
+    };
 }
 // TODO: Check why valueDeclaration sometimes doesn't exist.
 function getFirstDeclaration(symbol) {
     if (!symbol.declarations) {
         // It means that some file is missing or a type is incorrect.
-        console.log(symbol);
+        console.error(symbol);
         throw new Error(`Missing declaration for the symbol: ${symbol}.`);
     }
     return symbol.valueDeclaration || symbol.declarations[0];
@@ -193,6 +225,7 @@ function shortFileName(fileName) {
     const cwd = process.cwd();
     return path.relative(cwd, fileName);
 }
+/** Return an array of map's values */
 function getValues(map) {
     if (!map) {
         return [];

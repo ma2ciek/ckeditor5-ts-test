@@ -13,5 +13,4 @@ tsConfig.include.forEach((fileOrGlob) => {
 const output = generate_documentation_1.default(files, tsConfig.compilerOptions);
 // print out the doc
 console.log(JSON.stringify(output, undefined, 4));
-console.log('Success');
 //# sourceMappingURL=ts-parser.js.map

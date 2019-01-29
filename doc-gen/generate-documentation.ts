@@ -19,6 +19,8 @@ export default function generateDocumentation(
 		if ( program.getRootFileNames().includes( sourceFile.fileName ) ) {
 			// Walk the tree to search for exported stuff.
 			ts.forEachChild( sourceFile, node => visit( node ) );
+
+			const symbol = (sourceFile as any).locals.get( 'c' );
 		}
 	}
 
@@ -221,17 +223,56 @@ function isNodeExported( node: ts.Node ): boolean {
 }
 
 // TODO: What type do we need at the end? How much deep it should be?
-function getTypeInfo( checker: ts.TypeChecker, type: ts.Type ): TypeInfo {
-	const typeInfo: TypeInfo = {
-		value: checker.typeToString( type )
+function getTypeInfo( checker: ts.TypeChecker, type: ts.Type ): Type {
+	if ( type.isUnion() ) {
+		return {
+			kind: 'union',
+			value: type.types.map( t => getTypeInfo( checker, t ) )
+		}
+	}
+
+	// TODO - maybe we can check it differently.
+	if ( ( type as any ).intrinsicName === 'error' ) {
+		// throw new Error( 'Error has happened while parsing type.' );
 	}
 
 	// Primitive types don't have symbol.
 	if ( type.symbol ) {
-		typeInfo.file = getFileName( getFirstDeclaration( type.symbol ) );
+		const typeRef = ( type as ts.TypeReference );
+
+		const fileName = getFileName( getFirstDeclaration( typeRef.symbol ) )
+			.replace( 'node_modules/', '' );
+
+		const typeInfo: TypeRef = {
+			kind: 'reference',
+			value: checker.typeToString( typeRef ),
+			id: ( typeRef as any ).id // TODO: internal.
+		}
+
+		if ( !fileName.startsWith( 'typescript' ) ) {
+			typeInfo.file = fileName;
+		}
+
+		// Generic types like Array<string>.
+		if ( typeRef.typeArguments ) {
+			typeInfo.typeArgs = [ ...typeRef.typeArguments ]
+				.map( t => getTypeInfo( checker, t ) )
+
+			// TODO
+			typeInfo.value = typeRef.symbol.name;
+		}
+
+		return typeInfo;
 	}
 
-	return typeInfo;
+	// TODO: Check literal types.
+	// console.log( ( type as ts.LiteralType ).value );
+
+	// Assume that the type is primitive.
+	return {
+		value: checker.typeToString( type ),
+		kind: 'primitive'
+	};
 }
 
 // TODO: Check why valueDeclaration sometimes doesn't exist.
@@ -239,7 +280,7 @@ function getFirstDeclaration( symbol: ts.Symbol ): ts.Declaration {
 	if ( !symbol.declarations ) {
 		// It means that some file is missing or a type is incorrect.
 
-		console.log( symbol );
+		console.error( symbol );
 		throw new Error( `Missing declaration for the symbol: ${ symbol }.` );
 	}
 
@@ -269,6 +310,7 @@ function shortFileName( fileName: string ) {
 	return path.relative( cwd, fileName );
 }
 
+/** Return an array of map's values */
 function getValues<T>( map?: ts.UnderscoreEscapedMap<T> ): T[] {
 	if ( !map ) {
 		return [];
@@ -288,25 +330,13 @@ function getValues<T>( map?: ts.UnderscoreEscapedMap<T> ): T[] {
 	}
 }
 
-// class IdManager<T extends object> {
-// 	map = new WeakMap<T, number>();
-// 	id = -1;
-
-// 	set( e: T ) {
-// 		const id = ++this.id;
-// 		this.map.set( id, e );
-// 	}
-
-
-// }
-
 interface DocEntry {
 	name?: string;
 	meta?: MetaData;
 	documentation?: string;
-	type?: TypeInfo;
+	type?: Type;
 	parameters?: DocParameter[];
-	returnType?: TypeInfo;
+	returnType?: Type;
 	implements?: string[];
 	documented?: boolean;
 	private?: boolean;
@@ -315,7 +345,6 @@ interface DocEntry {
 		name: string;
 		documentation: string;
 	}[];
-	id?: number;
 	memberOf?: string; // TODO: id would be better (?).
 	fullName?: string;
 	callSignatures?: any[]; // TODO
@@ -330,10 +359,25 @@ interface MetaData {
 interface DocParameter {
 	name: string;
 	documentation: string;
-	type: TypeInfo;
+	type: Type;
 }
 
-interface TypeInfo {
+type Type = PrimitiveType | TypeRef | UnionType;
+
+interface UnionType {
+	kind: 'union';
+	value: Type[];
+}
+
+interface PrimitiveType {
+	kind: 'primitive';
+	value: string | number | ts.PseudoBigInt;
+}
+
+interface TypeRef {
+	kind: 'reference';
 	value: string;
 	file?: string;
+	typeArgs?: Type[];
+	id: number;
 }

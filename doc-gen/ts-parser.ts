@@ -19,5 +19,3 @@ const output = generateDocumentation(
 
 // print out the doc
 console.log( JSON.stringify( output, undefined, 4 ) );
-
-console.log( 'Success' );
